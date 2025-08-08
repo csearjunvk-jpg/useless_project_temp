@@ -1,0 +1,524 @@
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>HOSTEL APP</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+    }
+
+    .tab-content {
+      display: none;
+    }
+
+    .tab-content.active {
+      display: block;
+    }
+  </style>
+</head>
+
+<body class="bg-gray-100 text-green-800 min-h-screen font-sans flex flex-col">
+
+  <!-- Header -->
+  <header class="bg-green-700 text-white px-6 py-4 shadow-md flex justify-center items-center flex-shrink-0 select-none">
+    <h1 class="text-2xl font-bold tracking-widest uppercase">🏠 HOSTEL APP</h1>
+  </header>
+
+  <!-- Emergency Alert -->
+  <div id="emergencyAlert" class="hidden fixed top-16 left-0 right-0 bg-red-700 text-white font-bold text-center py-3 animate-pulse z-50 shadow-lg">
+    🚨 EMERGENCY! PLEASE TAKE IMMEDIATE ACTION!
+  </div>
+
+  <!-- Audio Alert -->
+  <audio id="alertSound" preload="auto">
+    <source src="https://actions.google.com/sounds/v1/alarms/alarm_clock.ogg" type="audio/ogg" />
+  </audio>
+
+  <div class="flex flex-1 min-h-0 overflow-hidden">
+    <!-- Sidebar -->
+    <aside class="bg-green-100 w-64 min-h-screen p-4 hidden md:flex flex-col flex-shrink-0 overflow-y-auto select-none">
+      <h2 class="text-lg font-bold mb-4 border-b border-green-400 pb-2">MENU</h2>
+      <ul class="space-y-3">
+        <li><button data-tab="login" class="tab-btn w-full text-left text-green-800 hover:text-green-900 focus:outline-none focus:ring-2 focus:ring-green-600 rounded">🔐 LOGIN</button></li>
+        <li><button data-tab="register" class="tab-btn w-full text-left text-green-800 hover:text-green-900 focus:outline-none focus:ring-2 focus:ring-green-600 rounded">➕ REGISTER</button></li>
+        <li><button data-tab="profile" class="tab-btn w-full text-left text-green-800 hover:text-green-900 focus:outline-none focus:ring-2 focus:ring-green-600 rounded">👤 PROFILE</button></li>
+        <li><button data-tab="complaints" class="tab-btn w-full text-left text-green-800 hover:text-green-900 focus:outline-none focus:ring-2 focus:ring-green-600 rounded">📝 COMPLAINTS</button></li>
+        <li><button data-tab="notifications" class="tab-btn w-full text-left text-green-800 hover:text-green-900 focus:outline-none focus:ring-2 focus:ring-green-600 rounded">🔔 NOTIFICATIONS</button></li>
+        <li><button data-tab="notice" class="tab-btn w-full text-left text-green-800 hover:text-green-900 focus:outline-none focus:ring-2 focus:ring-green-600 rounded">📢 NOTICE BOARD</button></li>
+        <li><button data-tab="events" class="tab-btn w-full text-left text-green-800 hover:text-green-900 focus:outline-none focus:ring-2 focus:ring-green-600 rounded">📅 EVENTS</button></li>
+        <li><button data-tab="tracker" class="tab-btn w-full text-left text-green-800 hover:text-green-900 focus:outline-none focus:ring-2 focus:ring-green-600 rounded">📊 MONTHLY TRACKER</button></li>
+        <li><button data-tab="expenses" class="tab-btn w-full text-left text-green-800 hover:text-green-900 focus:outline-none focus:ring-2 focus:ring-green-600 rounded">💸 EXPENSES</button></li>
+        <li><button data-tab="gym" class="tab-btn w-full text-left text-green-800 hover:text-green-900 focus:outline-none focus:ring-2 focus:ring-green-600 rounded">🏋️ GYM LOG</button></li>
+        <li><button data-tab="leave" class="tab-btn w-full text-left text-green-800 hover:text-green-900 focus:outline-none focus:ring-2 focus:ring-green-600 rounded">🛫 LEAVE FORM</button></li>
+        <li><button data-tab="mess" class="tab-btn w-full text-left text-green-800 hover:text-green-900 focus:outline-none focus:ring-2 focus:ring-green-600 rounded">🍽️ MESS FEEDBACK</button></li>
+        <li><button data-tab="chat" class="tab-btn w-full text-left text-green-800 hover:text-green-900 focus:outline-none focus:ring-2 focus:ring-green-600 rounded">💬 CHAT</button></li>
+        <li><button data-tab="admin" class="tab-btn w-full text-left text-green-800 hover:text-green-900 focus:outline-none focus:ring-2 focus:ring-green-600 rounded">🛠️ ADMIN PANEL</button></li>
+      </ul>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="flex-1 p-6 space-y-6 overflow-y-auto min-h-0">
+      <!-- Login -->
+      <section class="tab-content active max-w-md mx-auto md:mx-0" id="login">
+        <h2 class="text-2xl font-bold mb-4">LOGIN</h2>
+        <form class="bg-green-50 p-6 rounded shadow space-y-4" onsubmit="handleLogin(event)" novalidate>
+          <select id="loginRole" class="w-full p-3 border border-green-300 rounded focus:outline-none focus:ring-2 focus:ring-green-600" required>
+            <option value="" disabled selected>SELECT ROLE</option>
+            <option>STUDENT</option>
+            <option>WARDEN</option>
+            <option>STUDENT LEADER</option>
+          </select>
+          <input type="text" id="loginUsername" placeholder="USERNAME" class="w-full p-3 border border-green-300 rounded focus:outline-none focus:ring-2 focus:ring-green-600" required />
+          <input type="password" id="loginPassword" placeholder="PASSWORD" class="w-full p-3 border border-green-300 rounded focus:outline-none focus:ring-2 focus:ring-green-600" required />
+          <button type="submit" class="bg-green-700 hover:bg-green-800 text-white px-4 py-2 rounded w-full transition">LOGIN</button>
+        </form>
+      </section>
+
+      <!-- Register -->
+      <section class="tab-content max-w-md mx-auto md:mx-0" id="register">
+        <h2 class="text-2xl font-bold mb-4">REGISTER</h2>
+        <form class="bg-green-50 p-6 rounded shadow space-y-4" onsubmit="handleRegister(event)" novalidate>
+          <input type="text" id="registerFullName" placeholder="FULL NAME" class="w-full p-3 border border-green-300 rounded focus:outline-none focus:ring-2 focus:ring-green-600" required />
+          <input type="text" id="registerUsername" placeholder="USERNAME" class="w-full p-3 border border-green-300 rounded focus:outline-none focus:ring-2 focus:ring-green-600" required />
+          <input type="email" id="registerEmail" placeholder="EMAIL" class="w-full p-3 border border-green-300 rounded focus:outline-none focus:ring-2 focus:ring-green-600" required />
+          <input type="text" id="registerPhone" placeholder="PHONE" class="w-full p-3 border border-green-300 rounded focus:outline-none focus:ring-2 focus:ring-green-600" required />
+          <input type="text" id="registerRoomNumber" placeholder="ROOM NUMBER (e.g., A-204)" class="w-full p-3 border border-green-300 rounded focus:outline-none focus:ring-2 focus:ring-green-600" />
+          <input type="password" id="registerPassword" placeholder="CREATE PASSWORD" class="w-full p-3 border border-green-300 rounded focus:outline-none focus:ring-2 focus:ring-green-600" required />
+          <button type="submit" class="bg-green-700 hover:bg-green-800 text-white px-4 py-2 rounded w-full transition">REGISTER</button>
+        </form>
+      </section>
+
+      <!-- Profile -->
+      <section class="tab-content max-w-md mx-auto md:mx-0" id="profile">
+        <h2 class="text-2xl font-bold mb-4">MY PROFILE</h2>
+        <div class="bg-green-50 p-6 rounded shadow space-y-3">
+          <p><strong>NAME:</strong> <span id="profileFullName"></span></p>
+          <p><strong>USERNAME:</strong> <span id="profileUsername"></span></p>
+          <p><strong>EMAIL:</strong> <span id="profileEmail"></span></p>
+          <p><strong>PHONE:</strong> <span id="profilePhone"></span></p>
+          <p><strong>ROOM:</strong> <span id="profileRoomNumber"></span></p>
+          <button class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded mt-2 transition" onclick="showEditProfileForm()">UPDATE INFO</button>
+        </div>
+        <form id="editProfileForm" class="bg-green-50 p-6 rounded shadow space-y-4 mt-4 hidden" onsubmit="handleUpdateProfile(event)" novalidate>
+          <h3 class="text-xl font-semibold mb-3">EDIT PROFILE</h3>
+          <input type="text" id="editFullName" placeholder="FULL NAME" class="w-full p-3 border border-green-300 rounded focus:outline-none focus:ring-2 focus:ring-green-600" required />
+          <input type="email" id="editEmail" placeholder="EMAIL" class="w-full p-3 border border-green-300 rounded focus:outline-none focus:ring-2 focus:ring-green-600" required />
+          <input type="text" id="editPhone" placeholder="PHONE" class="w-full p-3 border border-green-300 rounded focus:outline-none focus:ring-2 focus:ring-green-600" required />
+          <input type="text" id="editRoomNumber" placeholder="ROOM NUMBER" class="w-full p-3 border border-green-300 rounded focus:outline-none focus:ring-2 focus:ring-green-600" />
+          <div class="flex space-x-3">
+            <button type="submit" class="bg-green-700 hover:bg-green-800 text-white px-4 py-2 rounded flex-1 transition">SAVE CHANGES</button>
+            <button type="button" class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded flex-1 transition" onclick="hideEditProfileForm()">CANCEL</button>
+          </div>
+        </form>
+      </section>
+
+      <!-- Complaints -->
+      <section class="tab-content max-w-md mx-auto md:mx-0" id="complaints">
+        <h2 class="text-2xl font-bold mb-4">SUBMIT COMPLAINT</h2>
+        <form class="bg-green-50 p-6 rounded shadow space-y-4" onsubmit="handleComplaint(event)" novalidate>
+          <input type="text" id="complaintTitle" placeholder="COMPLAINT TITLE" class="w-full p-3 border border-green-300 rounded focus:outline-none focus:ring-2 focus:ring-red-600" required />
+          <textarea id="complaintDetails" placeholder="DESCRIBE THE ISSUE..." class="w-full p-3 border border-green-300 rounded focus:outline-none focus:ring-2 focus:ring-red-600" rows="4" required></textarea>
+          <button type="submit" class="bg-red-700 hover:bg-red-800 text-white px-4 py-2 rounded w-full transition">SUBMIT</button>
+        </form>
+        <h3 class="mt-8 font-semibold text-lg">YOUR COMPLAINTS</h3>
+        <ul id="complaintList" class="mt-4 space-y-3"></ul>
+      </section>
+
+      <!-- Notifications -->
+      <section class="tab-content max-w-md mx-auto md:mx-0" id="notifications">
+        <h2 class="text-2xl font-bold mb-4">NOTIFICATIONS</h2>
+        <ul class="space-y-3">
+          <li class="bg-green-50 p-4 rounded shadow flex items-center space-x-3">
+            <i class="fas fa-tint text-blue-500 text-lg"></i>
+            <span>🚿 WATER SUPPLY MAINTENANCE TOMORROW</span>
+          </li>
+          <li class="bg-green-50 p-4 rounded shadow flex items-center space-x-3">
+            <i class="fas fa-fire text-red-500 text-lg"></i>
+            <span>🔥 FIRE SAFETY DRILL AT 3 PM</span>
+          </li>
+        </ul>
+      </section>
+
+      <!-- Notice Board -->
+      <section class="tab-content max-w-md mx-auto md:mx-0" id="notice">
+        <h2 class="text-2xl font-bold mb-4">NOTICE BOARD</h2>
+        <form class="bg-green-50 p-6 rounded shadow space-y-4" onsubmit="handleNotice(event)" novalidate>
+          <input type="text" id="noticeTitle" placeholder="NOTICE TITLE" class="w-full p-3 border border-green-300 rounded focus:outline-none focus:ring-2 focus:ring-green-600" required />
+          <textarea id="noticeContent" placeholder="NOTICE CONTENT..." class="w-full p-3 border border-green-300 rounded focus:outline-none focus:ring-2 focus:ring-green-600" rows="4" required></textarea>
+          <button type="submit" class="bg-green-700 hover:bg-green-800 text-white px-4 py-2 rounded w-full transition">ADD NOTICE</button>
+        </form>
+        <h3 class="mt-8 font-semibold text-lg">RECENT NOTICES</h3>
+        <ul id="noticeList" class="mt-4 space-y-3"></ul>
+      </section>
+
+      <!-- Events -->
+      <section class="tab-content max-w-md mx-auto md:mx-0" id="events">
+        <h2 class="text-2xl font-bold mb-4">EVENT CALENDAR</h2>
+        <form class="bg-green-50 p-6 rounded shadow space-y-4" onsubmit="handleEvent(event)" novalidate>
+          <input type="text" id="eventTitle" placeholder="EVENT TITLE" class="w-full p-3 border border-green-300 rounded focus:outline-none focus:ring-2 focus:ring-green-600" required />
+          <input type="date" id="eventDate" class="w-full p-3 border border-green-300 rounded focus:outline-none focus:ring-2 focus:ring-green-600" required />
+          <textarea id="eventDescription" placeholder="EVENT DESCRIPTION (OPTIONAL)" class="w-full p-3 border border-green-300 rounded focus:outline-none focus:ring-2 focus:ring-green-600" rows="2"></textarea>
+          <button type="submit" class="bg-green-700 hover:bg-green-800 text-white px-4 py-2 rounded w-full transition">ADD EVENT</button>
+        </form>
+        <h3 class="mt-8 font-semibold text-lg">UPCOMING EVENTS</h3>
+        <ul id="eventList" class="mt-4 space-y-3"></ul>
+      </section>
+
+      <!-- Tracker -->
+      <section class="tab-content max-w-md mx-auto md:mx-0" id="tracker">
+        <h2 class="text-2xl font-bold mb-4">MONTHLY ATTENDANCE TRACKER</h2>
+        <div class="bg-green-50 p-6 rounded shadow grid grid-cols-2 gap-6">
+          <div class="p-4 bg-white rounded shadow-sm text-center">
+            <p class="text-5xl font-bold text-green-600" id="daysPresent">23</p>
+            <p class="text-sm text-gray-600">DAYS PRESENT</p>
+          </div>
+          <div class="p-4 bg-white rounded shadow-sm text-center">
+            <p class="text-5xl font-bold text-red-600" id="daysAbsent">2</p>
+            <p class="text-sm text-gray-600">DAYS ABSENT</p>
+          </div>
+          <div class="col-span-2 mt-6">
+            <h3 class="font-semibold text-lg mb-3">ATTENDANCE HISTORY</h3>
+            <ul id="attendanceHistory" class="space-y-1 text-sm list-disc list-inside">
+              <li>JANUARY: 25/31</li>
+              <li>FEBRUARY: 20/28</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- Expenses -->
+      <section class="tab-content max-w-md mx-auto md:mx-0" id="expenses">
+        <h2 class="text-2xl font-bold mb-4">MY EXPENSES</h2>
+        <form class="bg-green-50 p-6 rounded shadow space-y-4" onsubmit="handleAddExpense(event)" novalidate>
+          <input type="text" id="expenseTitle" placeholder="EXPENSE TITLE" class="w-full p-3 border border-green-300 rounded focus:outline-none focus:ring-2 focus:ring-green-600" required />
+          <input type="number" id="expenseAmount" placeholder="AMOUNT ₹" class="w-full p-3 border border-green-300 rounded focus:outline-none focus:ring-2 focus:ring-green-600" required min="0" step="0.01" />
+          <button type="submit" class="bg-green-700 hover:bg-green-800 text-white px-4 py-2 rounded w-full transition">ADD</button>
+        </form>
+        <h3 class="mt-8 font-semibold text-lg">EXPENSE LIST</h3>
+        <ul id="expenseList" class="mt-4 space-y-3"></ul>
+        <div class="mt-6 p-4 bg-green-100 rounded shadow">
+          <p class="text-lg font-bold">TOTAL EXPENSES: ₹<span id="totalExpenses">0.00</span></p>
+        </div>
+      </section>
+
+      <!-- Gym -->
+      <section class="tab-content max-w-md mx-auto md:mx-0" id="gym">
+        <h2 class="text-2xl font-bold mb-4">GYM LOG</h2>
+        <div class="bg-green-50 p-6 rounded shadow max-w-md">
+          <p class="text-lg">🏋️ 5 WORKOUTS THIS WEEK</p>
+        </div>
+      </section>
+
+      <!-- Leave -->
+      <section class="tab-content max-w-md mx-auto md:mx-0" id="leave">
+        <h2 class="text-2xl font-bold mb-4">LEAVE APPLICATION</h2>
+        <form class="bg-green-50 p-6 rounded shadow space-y-4" onsubmit="handleLeaveApplication(event)" novalidate>
+          <input type="date" class="w-full p-3 border border-green-300 rounded focus:outline-none focus:ring-2 focus:ring-green-600" required />
+          <input type="text" placeholder="REASON FOR LEAVE" class="w-full p-3 border border-green-300 rounded focus:outline-none focus:ring-2 focus:ring-green-600" required />
+          <button type="submit" class="bg-green-700 hover:bg-green-800 text-white px-4 py-2 rounded w-full transition">SUBMIT LEAVE</button>
+        </form>
+      </section>
+
+      <!-- Mess Feedback -->
+      <section class="tab-content max-w-md mx-auto md:mx-0" id="mess">
+        <h2 class="text-2xl font-bold mb-4">MESS FEEDBACK</h2>
+        <textarea id="messFeedback" class="w-full p-4 border border-green-300 rounded focus:outline-none focus:ring-2 focus:ring-green-600" placeholder="WRITE YOUR FEEDBACK HERE..." rows="5"></textarea>
+        <button id="submitMessFeedback" class="mt-4 bg-green-700 hover:bg-green-800 text-white px-4 py-2 rounded w-full transition">SUBMIT</button>
+      </section>
+
+      <!-- Chat -->
+      <section class="tab-content max-w-md mx-auto md:mx-0" id="chat">
+        <h2 class="text-2xl font-bold mb-4">CHAT ROOM</h2>
+        <div class="bg-green-50 p-4 rounded shadow h-48 overflow-y-auto" id="chatBox" aria-live="polite" aria-atomic="true"></div>
+        <form id="chatForm" class="flex space-x-2 mt-4" onsubmit="handleChatSend(event)" novalidate>
+          <input type="text" id="chatInput" class="flex-1 p-3 border border-green-300 rounded focus:outline-none focus:ring-2 focus:ring-green-600" placeholder="TYPE A MESSAGE..." required />
+          <button type="submit" class="bg-green-700 hover:bg-green-800 text-white px-4 py-2 rounded transition">SEND</button>
+        </form>
+      </section>
+
+      <!-- Admin Panel -->
+      <section class="tab-content max-w-md mx-auto md:mx-0" id="admin">
+        <h2 class="text-2xl font-bold mb-4">ADMIN PANEL</h2>
+        <div class="bg-green-50 p-6 rounded shadow space-y-6">
+          <button id="triggerEmergencyBtn" class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded w-full transition">
+            🚨 TRIGGER EMERGENCY ALERT
+          </button>
+          <button id="stopEmergencyBtn" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded w-full transition">
+            ✅ STOP EMERGENCY ALERT
+          </button>
+          <audio id="fireAlarmAudio" loop preload="auto">
+            <source src="https://actions.google.com/sounds/v1/emergency/fire_alarm.ogg" type="audio/ogg" />
+            <source src="https://actions.google.com/sounds/v1/emergency/fire_alarm.mp3" type="audio/mpeg" />
+          </audio>
+          <h3 class="font-semibold text-lg">EMERGENCY CONTACTS</h3>
+          <ul id="emergencyContactsList" class="space-y-2 list-disc list-inside text-green-900"></ul>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script>
+    // Tab switching
+    const tabButtons = document.querySelectorAll('.tab-btn');
+    const tabContents = document.querySelectorAll('.tab-content');
+
+    tabButtons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const target = btn.getAttribute('data-tab');
+        tabContents.forEach(tc => {
+          tc.classList.toggle('active', tc.id === target);
+        });
+        tabButtons.forEach(b => b.classList.remove('font-bold', 'bg-green-200'));
+        btn.classList.add('font-bold', 'bg-green-200');
+      });
+    });
+
+    // Initialize first tab active
+    if (tabButtons.length) {
+      tabButtons[0].click();
+    }
+
+    // Profile data simulation
+    const profileData = {
+      fullName: 'John Doe',
+      username: 'johndoe',
+      email: 'john@example.com',
+      phone: '+91 9876543210',
+      roomNumber: 'A-204'
+    };
+
+    function loadProfile() {
+      document.getElementById('profileFullName').textContent = profileData.fullName;
+      document.getElementById('profileUsername').textContent = profileData.username;
+      document.getElementById('profileEmail').textContent = profileData.email;
+      document.getElementById('profilePhone').textContent = profileData.phone;
+      document.getElementById('profileRoomNumber').textContent = profileData.roomNumber;
+    }
+
+    function showEditProfileForm() {
+      document.getElementById('editProfileForm').classList.remove('hidden');
+      document.getElementById('profile').querySelector('div').classList.add('hidden');
+      document.getElementById('editFullName').value = profileData.fullName;
+      document.getElementById('editEmail').value = profileData.email;
+      document.getElementById('editPhone').value = profileData.phone;
+      document.getElementById('editRoomNumber').value = profileData.roomNumber;
+    }
+
+    function hideEditProfileForm() {
+      document.getElementById('editProfileForm').classList.add('hidden');
+      document.getElementById('profile').querySelector('div').classList.remove('hidden');
+    }
+
+    function handleUpdateProfile(event) {
+      event.preventDefault();
+      profileData.fullName = document.getElementById('editFullName').value.trim();
+      profileData.email = document.getElementById('editEmail').value.trim();
+      profileData.phone = document.getElementById('editPhone').value.trim();
+      profileData.roomNumber = document.getElementById('editRoomNumber').value.trim();
+      loadProfile();
+      hideEditProfileForm();
+      alert('Profile updated successfully!');
+    }
+
+    // Login handler (dummy)
+    function handleLogin(event) {
+      event.preventDefault();
+      const role = document.getElementById('loginRole').value;
+      const username = document.getElementById('loginUsername').value.trim();
+      const password = document.getElementById('loginPassword').value;
+      if (!role) {
+        alert('Please select a role.');
+        return;
+      }
+      alert(`Logged in as ${role} (${username})`);
+      event.target.reset();
+    }
+
+    // Register handler (dummy)
+    function handleRegister(event) {
+      event.preventDefault();
+      alert('Registration successful!');
+      event.target.reset();
+    }
+
+    // Complaints
+    const complaintList = document.getElementById('complaintList');
+    function handleComplaint(event) {
+      event.preventDefault();
+      const title = document.getElementById('complaintTitle').value.trim();
+      const details = document.getElementById('complaintDetails').value.trim();
+      if (!title || !details) return;
+      const li = document.createElement('li');
+      li.className = 'bg-red-100 p-4 rounded shadow max-w-md';
+      li.innerHTML = `<strong class="block mb-1">${title}</strong><p class="whitespace-pre-wrap">${details}</p>`;
+      complaintList.appendChild(li);
+      event.target.reset();
+    }
+
+    // Notifications (static)
+
+    // Notice Board
+    const noticeList = document.getElementById('noticeList');
+    function handleNotice(event) {
+      event.preventDefault();
+      const title = document.getElementById('noticeTitle').value.trim();
+      const content = document.getElementById('noticeContent').value.trim();
+      if (!title || !content) return;
+      const li = document.createElement('li');
+      li.className = 'bg-green-100 p-4 rounded shadow max-w-md';
+      li.innerHTML = `<strong class="block mb-1">${title}</strong><p class="whitespace-pre-wrap">${content}</p>`;
+      noticeList.prepend(li);
+      event.target.reset();
+    }
+
+    // Events
+    const eventList = document.getElementById('eventList');
+    function handleEvent(event) {
+      event.preventDefault();
+      const title = document.getElementById('eventTitle').value.trim();
+      const date = document.getElementById('eventDate').value;
+      const description = document.getElementById('eventDescription').value.trim();
+      if (!title || !date) return;
+      const li = document.createElement('li');
+      li.className = 'bg-green-100 p-4 rounded shadow max-w-md';
+      const dateObj = new Date(date);
+      const dateStr = dateObj.toLocaleDateString(undefined, { year: 'numeric', month: 'long', day: 'numeric' });
+      li.innerHTML = `<strong class="block mb-1">${title}</strong><span class="text-gray-600 text-sm">${dateStr}</span><p class="whitespace-pre-wrap mt-1">${description}</p>`;
+      eventList.prepend(li);
+      event.target.reset();
+    }
+
+    // Tracker (static data)
+
+    // Expenses
+    const expenseList = document.getElementById('expenseList');
+    const totalExpensesEl = document.getElementById('totalExpenses');
+    let totalExpenses = 0;
+    function handleAddExpense(event) {
+      event.preventDefault();
+      const title = document.getElementById('expenseTitle').value.trim();
+      const amount = parseFloat(document.getElementById('expenseAmount').value);
+      if (!title || isNaN(amount) || amount < 0) return;
+      const li = document.createElement('li');
+      li.className = 'bg-green-100 p-4 rounded shadow max-w-md flex justify-between';
+      li.innerHTML = `<span>${title}</span><span>₹${amount.toFixed(2)}</span>`;
+      expenseList.appendChild(li);
+      totalExpenses += amount;
+      totalExpensesEl.textContent = totalExpenses.toFixed(2);
+      event.target.reset();
+    }
+
+    // Leave Application (dummy)
+    function handleLeaveApplication(event) {
+      event.preventDefault();
+      alert('Leave application submitted!');
+      event.target.reset();
+    }
+
+    // Mess Feedback
+    const messFeedbackInput = document.getElementById('messFeedback');
+    const submitMessFeedbackBtn = document.getElementById('submitMessFeedback');
+    submitMessFeedbackBtn.addEventListener('click', () => {
+      const feedback = messFeedbackInput.value.trim();
+      if (!feedback) {
+        alert('Please write your feedback before submitting.');
+        return;
+      }
+      alert('Thank you for your feedback!');
+      messFeedbackInput.value = '';
+    });
+
+    // Chat
+    const chatBox = document.getElementById('chatBox');
+    const chatForm = document.getElementById('chatForm');
+    const chatInput = document.getElementById('chatInput');
+
+    function addChatMessage(message, fromUser = true) {
+      const div = document.createElement('div');
+      div.className = fromUser ? 'text-right' : 'text-left';
+      const bubble = document.createElement('span');
+      bubble.className = fromUser
+        ? 'inline-block bg-green-600 text-white px-3 py-1 rounded-lg max-w-xs break-words'
+        : 'inline-block bg-green-300 text-green-900 px-3 py-1 rounded-lg max-w-xs break-words';
+      bubble.textContent = message;
+      div.appendChild(bubble);
+      chatBox.appendChild(div);
+      chatBox.scrollTop = chatBox.scrollHeight;
+    }
+
+    function handleChatSend(event) {
+      event.preventDefault();
+      const message = chatInput.value.trim();
+      if (!message) return;
+      addChatMessage(message, true);
+      chatInput.value = '';
+      // Simulate reply
+      setTimeout(() => {
+        addChatMessage('This is an automated reply.', false);
+      }, 1000);
+    }
+
+    chatForm.addEventListener('submit', handleChatSend);
+
+    // Emergency Alert
+    const emergencyAlert = document.getElementById('emergencyAlert');
+    const alertSound = document.getElementById('alertSound');
+    const fireAlarmAudio = document.getElementById('fireAlarmAudio');
+    const triggerEmergencyBtn = document.getElementById('triggerEmergencyBtn');
+    const stopEmergencyBtn = document.getElementById('stopEmergencyBtn');
+    const emergencyContactsList = document.getElementById('emergencyContactsList');
+
+    const emergencyContacts = [
+      { name: 'Fire Department', number: '101' },
+      { name: 'Police', number: '100' },
+      { name: 'Ambulance', number: '102' },
+      { name: 'Hostel Warden', number: '+91 9876543210' },
+      { name: 'Security Office', number: '+91 9123456780' }
+    ];
+
+    function populateEmergencyContacts() {
+      emergencyContactsList.innerHTML = '';
+      emergencyContacts.forEach(contact => {
+        const li = document.createElement('li');
+        li.textContent = `${contact.name}: ${contact.number}`;
+        emergencyContactsList.appendChild(li);
+      });
+    }
+
+    function startEmergencyAlert() {
+      emergencyAlert.classList.remove('hidden');
+      alertSound.play().catch(() => { });
+      if (fireAlarmAudio) {
+        fireAlarmAudio.play().catch(() => { });
+      }
+    }
+
+    function stopEmergencyAlert() {
+      emergencyAlert.classList.add('hidden');
+      alertSound.pause();
+      alertSound.currentTime = 0;
+      if (fireAlarmAudio) {
+        fireAlarmAudio.pause();
+        fireAlarmAudio.currentTime = 0;
+      }
+    }
+
+    if (triggerEmergencyBtn) {
+      triggerEmergencyBtn.addEventListener('click', startEmergencyAlert);
+    }
+    if (stopEmergencyBtn) {
+      stopEmergencyBtn.addEventListener('click', stopEmergencyAlert);
+    }
+
+    // Initialize
+    loadProfile();
+    populateEmergencyContacts();
+  </script>
+</body>
+
+</html>
